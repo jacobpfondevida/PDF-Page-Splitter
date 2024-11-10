@@ -1,0 +1,9 @@
+{
+    "files": [
+        "main.py",
+        "mainwindow.ui",
+        "pdfProcessingWidget.ui",
+        "pdf_processor.py",
+        "requirements.txt"
+    ]
+}

@@ -1,0 +1,15 @@
+.qtcreator
+__pycache__
+# Ignore compiled binary files
+*.o
+*.exe
+*.dll
+
+# Ignore Qt build folders
+/build/
+
+# Ignore Qt Creator user-specific settings
+*.user
+
+# Ignore Visual Studio Code settings folder
+.vscode/
