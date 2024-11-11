@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGraphicsView, QHBoxLayout, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGraphicsView, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -40,10 +40,23 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.currentPageLabel)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.fileNameLineEdit = QLineEdit(self.verticalLayoutWidget)
         self.fileNameLineEdit.setObjectName(u"fileNameLineEdit")
 
-        self.verticalLayout.addWidget(self.fileNameLineEdit)
+        self.horizontalLayout_2.addWidget(self.fileNameLineEdit)
+
+        self.docTypeDropdownBox = QComboBox(self.verticalLayoutWidget)
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.setObjectName(u"docTypeDropdownBox")
+        self.docTypeDropdownBox.setMinimumSize(QSize(80, 0))
+
+        self.horizontalLayout_2.addWidget(self.docTypeDropdownBox)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -75,6 +88,9 @@ class Ui_Form(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.currentPageLabel.setText("")
         self.fileNameLineEdit.setText(QCoreApplication.translate("Form", u"Enter file name", None))
+        self.docTypeDropdownBox.setItemText(0, QCoreApplication.translate("Form", u"AUTH", None))
+        self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"REF", None))
+
         self.prevPageButton.setText(QCoreApplication.translate("Form", u"Previous Page", None))
         self.saveButton.setText(QCoreApplication.translate("Form", u"Save Page as PDF", None))
         self.nextPageButton.setText(QCoreApplication.translate("Form", u"Next Page", None))
