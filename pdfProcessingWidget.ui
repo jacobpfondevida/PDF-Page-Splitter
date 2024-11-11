@@ -34,11 +34,35 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="fileNameLineEdit">
-      <property name="text">
-       <string>Enter file name</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLineEdit" name="fileNameLineEdit">
+        <property name="text">
+         <string>Enter file name</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="docTypeDropdownBox">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>AUTH</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>REF</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
