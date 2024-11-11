@@ -57,12 +57,42 @@
         </item>
         <item>
          <property name="text">
-          <string>AUTH</string>
+          <string>Insurance Auth</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>REF</string>
+          <string>ID</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>OrthoK</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Outside Rx</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>POF Waiver</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rx Request</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Referrals</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Summaries</string>
          </property>
         </item>
        </widget>
@@ -89,6 +119,24 @@
        <widget class="QPushButton" name="nextPageButton">
         <property name="text">
          <string>Next Page</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="clearAllButton">
+        <property name="text">
+         <string>Clear All</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveAllPagesButton">
+        <property name="text">
+         <string>Save All Pages</string>
         </property>
        </widget>
       </item>

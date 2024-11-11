@@ -25,6 +25,8 @@ class PDFProcessingPage(QDialog):
         self.prevPageButton = self.findChild(QPushButton, "prevPageButton")
         self.nextPageButton = self.findChild(QPushButton, "nextPageButton")
         self.saveButton = self.findChild(QPushButton, "saveButton")
+        self.saveAllPagesButton = self.findChild(QPushButton, "saveAllPagesButton")
+        self.clearAllButton = self.findChild(QPushButton, "clearAllButton")
 
         # QLineEdit for the user to input the filename
         self.fileNameLineEdit = self.findChild(QLineEdit, "fileNameLineEdit")
@@ -37,6 +39,8 @@ class PDFProcessingPage(QDialog):
         self.prevPageButton.clicked.connect(self.show_prev_page)
         self.nextPageButton.clicked.connect(self.show_next_page)
         self.saveButton.clicked.connect(self.save_current_page)
+        self.saveAllPagesButton.clicked.connect(self.save_all_pages)
+        self.clearAllButton.clicked.connect(self.clear_page_configurations)
 
         # Initialize variables
         self.processor = None
@@ -103,17 +107,72 @@ class PDFProcessingPage(QDialog):
 
     def save_current_page(self):
         """Save the current page to the output folder with the user-defined filename."""
+
+        self.page_configurations[self.current_page]['file_name'] = self.fileNameLineEdit.text().strip()
+        self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
+
         if self.processor:
-            # Get the custom file name from the QLineEdit
-            file_name = self.fileNameLineEdit.text().strip()
-            print(f"stripped name: {file_name}")
-            if file_name:
+            file_name = self.page_configurations[self.current_page]['file_name']
+            doc_type = self.page_configurations[self.current_page]['doc_type']
+
+            if file_name and file_name != "Enter file name":
                 # Get the output file path
-                self.processor.save_page_as_pdf(self.current_page, file_name)
-                print("post processor save")
+                try:
+                    self.processor.save_page_as_pdf(self.current_page, file_name, doc_type)
+                except Exception as e:
+                    warning_message = f"Error saving page {self.current_page + 1} as '{file_name}.pdf' in {doc_type} folder: {e}."
+                    QMessageBox.warning(self, "Problem saving page", warning_message)
+
+                success_message = f"Successfully saved page {self.current_page + 1} as '{file_name}.pdf' in {doc_type} folder."
+                QMessageBox.about(self, "Success", success_message)
+
             else:
                 # If no file name is provided, show an error
                 QMessageBox.warning(self, "Invalid Filename", "Please enter a valid filename.")
+
+    def save_all_pages(self):
+        """Save all pages to their respective folders if all pages' information was entered.
+           Otherwise, create a warning"""
+        self.page_configurations[self.current_page]['file_name'] = self.fileNameLineEdit.text().strip()
+        self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
+
+        file_name_indices = [i for i, d in enumerate(self.page_configurations) if d.get("file_name") == "Enter file name"]
+        doc_type_indices = [i for i, d in enumerate(self.page_configurations) if d.get("doc_type") == "Choose file type"]
+
+        if not file_name_indices and not doc_type_indices:
+            try:
+                if self.processor:
+                    for i in range(len(self.page_configurations)):
+                        current_file_name = self.page_configurations[i]['file_name']
+                        current_doc_type = self.page_configurations[i]['doc_type']
+
+                        self.processor.save_page_as_pdf(i, current_file_name, current_doc_type)
+
+                    success_message = f"Successfully saved {self.total_pages}."
+                    QMessageBox.about(self, "Success", success_message)
+            except Exception as e:
+                error_message = f"Error saving page named '{current_file_name}.pdf' in the {current_doc_type} folder: {e}"
+                QMessageBox.warning(self, "Error saving pages", error_message)
+        else:
+            file_name_warning_message = ""
+            doc_type_warning_message = ""
+            warning_message = ""
+
+            if file_name_indices:
+                adjusted_file_name_page_numbers = [x + 1 for x in file_name_indices]
+                file_name_warning_message = f"The following pages have no file name entered: {adjusted_file_name_page_numbers}."
+
+            if doc_type_indices:
+                adjusted_doc_type_page_numbers = [x + 1 for x in doc_type_indices]
+                doc_type_warning_message = f"The following pages have no document type entered: {adjusted_doc_type_page_numbers}."
+
+            warning_message = file_name_warning_message + "\n" + doc_type_warning_message
+
+            QMessageBox.warning(self, "File(s) not configured", warning_message)
+
+    def clear_page_configurations(self):
+        self.page_configurations = [{"file_name" : "Enter file name", "doc_type": "Choose file type"} for page in range(self.total_pages)]
+        self.update_page_display()
 
 
 class MainWindow(QMainWindow):
@@ -142,8 +201,6 @@ class MainWindow(QMainWindow):
     def open_file_dialog(self):
         # Open a file dialog and get the selected file path
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
-
-        sender = self.sender()
 
         # Check if a file was selected
         if file_path:

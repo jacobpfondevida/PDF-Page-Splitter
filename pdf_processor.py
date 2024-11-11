@@ -21,6 +21,18 @@ class PDFProcessor:
         self.current_page = 0  # Start from the first page
         self.file_path = file_path
         self.folder_path = folder_path
+
+        self.doc_type_dictionary = {
+        "Insurance Auth" : "Insurance Auths",
+        "ID" : "ID'S",
+        "OrthoK" : "OrthoK",
+        "Outside Rx" : "Outside Rx",
+        "POF Waiver" : "POF Waivers",
+        "Rx Request" : "Prescription Requests",
+        "Referrals" : "Referrals",
+        "Summaries" : "Summaries"
+        }
+
         print(f"PDFProcessor class initialized with {self.total_pages} pages")
 
     def get_page_image(self, page_number):
@@ -56,12 +68,12 @@ class PDFProcessor:
             print(f"Error extracting text from page {page_number}: {e}")
             return ""
 
-    def save_page_as_pdf(self, page_number, output_file_name):
-        print("pressed save")
+    def save_page_as_pdf(self, page_number, output_file_name, doc_type):
         try:
-            print("in try block")
-            output_file_path = f"{self.folder_path}/{output_file_name}.pdf"
-            page = self.pdf_document.load_page(page_number)
+            print(f"Conversion: {self.doc_type_dictionary.get(doc_type)}")
+            doc_type_folder = self.doc_type_dictionary[doc_type]
+            output_file_path = f"{self.folder_path}/{doc_type_folder}/{output_file_name}.pdf"
+            print(f"file path: {output_file_path}")
             pdf_writer = fitz.open()  # Create a new PDF writer object
             pdf_writer.insert_pdf(self.pdf_document, from_page=page_number, to_page=page_number)
             pdf_writer.save(output_file_path)

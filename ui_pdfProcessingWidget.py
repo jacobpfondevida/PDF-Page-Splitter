@@ -51,6 +51,12 @@ class Ui_Form(object):
         self.docTypeDropdownBox.addItem("")
         self.docTypeDropdownBox.addItem("")
         self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
         self.docTypeDropdownBox.setObjectName(u"docTypeDropdownBox")
         self.docTypeDropdownBox.setMinimumSize(QSize(100, 0))
 
@@ -79,6 +85,21 @@ class Ui_Form(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.clearAllButton = QPushButton(self.verticalLayoutWidget)
+        self.clearAllButton.setObjectName(u"clearAllButton")
+
+        self.horizontalLayout_3.addWidget(self.clearAllButton)
+
+        self.saveAllPagesButton = QPushButton(self.verticalLayoutWidget)
+        self.saveAllPagesButton.setObjectName(u"saveAllPagesButton")
+
+        self.horizontalLayout_3.addWidget(self.saveAllPagesButton)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+
 
         self.retranslateUi(Form)
 
@@ -90,11 +111,19 @@ class Ui_Form(object):
         self.currentPageLabel.setText("")
         self.fileNameLineEdit.setText(QCoreApplication.translate("Form", u"Enter file name", None))
         self.docTypeDropdownBox.setItemText(0, QCoreApplication.translate("Form", u"Choose file type", None))
-        self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"AUTH", None))
-        self.docTypeDropdownBox.setItemText(2, QCoreApplication.translate("Form", u"REF", None))
+        self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"Insurance Auth", None))
+        self.docTypeDropdownBox.setItemText(2, QCoreApplication.translate("Form", u"ID", None))
+        self.docTypeDropdownBox.setItemText(3, QCoreApplication.translate("Form", u"OrthoK", None))
+        self.docTypeDropdownBox.setItemText(4, QCoreApplication.translate("Form", u"Outside Rx", None))
+        self.docTypeDropdownBox.setItemText(5, QCoreApplication.translate("Form", u"POF Waiver", None))
+        self.docTypeDropdownBox.setItemText(6, QCoreApplication.translate("Form", u"Rx Request", None))
+        self.docTypeDropdownBox.setItemText(7, QCoreApplication.translate("Form", u"Referrals", None))
+        self.docTypeDropdownBox.setItemText(8, QCoreApplication.translate("Form", u"Summaries", None))
 
         self.prevPageButton.setText(QCoreApplication.translate("Form", u"Previous Page", None))
         self.saveButton.setText(QCoreApplication.translate("Form", u"Save Page as PDF", None))
         self.nextPageButton.setText(QCoreApplication.translate("Form", u"Next Page", None))
+        self.clearAllButton.setText(QCoreApplication.translate("Form", u"Clear All", None))
+        self.saveAllPagesButton.setText(QCoreApplication.translate("Form", u"Save All Pages", None))
     # retranslateUi
 
