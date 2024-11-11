@@ -23,10 +23,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(692, 555)
+        Form.resize(685, 663)
         self.verticalLayoutWidget = QWidget(Form)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(20, 0, 641, 521))
+        self.verticalLayoutWidget.setGeometry(QRect(20, 0, 641, 641))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -35,10 +35,27 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.graphicsView)
 
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.currentPageLabel = QLabel(self.verticalLayoutWidget)
         self.currentPageLabel.setObjectName(u"currentPageLabel")
+        self.currentPageLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.verticalLayout.addWidget(self.currentPageLabel)
+        self.horizontalLayout_5.addWidget(self.currentPageLabel)
+
+        self.currentPageLineEdit = QLineEdit(self.verticalLayoutWidget)
+        self.currentPageLineEdit.setObjectName(u"currentPageLineEdit")
+        self.currentPageLineEdit.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_5.addWidget(self.currentPageLineEdit)
+
+        self.totalPagesLabel = QLabel(self.verticalLayoutWidget)
+        self.totalPagesLabel.setObjectName(u"totalPagesLabel")
+
+        self.horizontalLayout_5.addWidget(self.totalPagesLabel)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -108,7 +125,9 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.currentPageLabel.setText("")
+        self.currentPageLabel.setText(QCoreApplication.translate("Form", u"Current Page: ", None))
+        self.currentPageLineEdit.setInputMask("")
+        self.totalPagesLabel.setText("")
         self.fileNameLineEdit.setText(QCoreApplication.translate("Form", u"Enter file name", None))
         self.docTypeDropdownBox.setItemText(0, QCoreApplication.translate("Form", u"Choose file type", None))
         self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"Insurance Auth", None))

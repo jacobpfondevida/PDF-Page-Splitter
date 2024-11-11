@@ -1,7 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog, QComboBox
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import QByteArray
+from PyQt6.QtCore import QByteArray, Qt
 import sys
 from pdf_processor import PDFProcessor  # Assuming you have this class defined correctly
 
@@ -28,12 +28,17 @@ class PDFProcessingPage(QDialog):
         self.saveAllPagesButton = self.findChild(QPushButton, "saveAllPagesButton")
         self.clearAllButton = self.findChild(QPushButton, "clearAllButton")
 
-        # QLineEdit for the user to input the filename
         self.fileNameLineEdit = self.findChild(QLineEdit, "fileNameLineEdit")
+        self.fileNameLineEdit.editingFinished.connect(self.save_file_name)
 
         self.currentPageLabel = self.findChild(QLabel, "currentPageLabel")
+        self.currentPageLineEdit = self.findChild(QLineEdit, "currentPageLineEdit")
+        self.currentPageLineEdit.editingFinished.connect(self.jump_to_page)
+
+        self.totalPagesLabel = self.findChild(QLabel, "totalPagesLabel")
 
         self.docTypeDropdownBox = self.findChild(QComboBox, "docTypeDropdownBox")
+        self.docTypeDropdownBox.activated.connect(self.save_doc_type)
 
         # Connect button signals to methods
         self.prevPageButton.clicked.connect(self.show_prev_page)
@@ -49,18 +54,21 @@ class PDFProcessingPage(QDialog):
 
         print("PDFProcessingPage initialized")
 
+    def keyPressEvent(self, event):
+        """Override to prevent Enter key from triggering button actions."""
+        # If the Enter key is pressed and the focus is on the QLineEdit
+        if event.key() == Qt.Key.Key_Return:
+            event.accept()
+
     def set_paths(self, file_path, folder_path):
         """Set the file and folder paths passed from the main window."""
-        print("in set_paths")
         self.file_path = file_path
         self.folder_path = folder_path
 
         self.processor = PDFProcessor(self.file_path, self.folder_path)  # Initialize PDFProcessor with the file path
         self.total_pages = self.processor.get_total_pages()
         self.page_configurations = [{"file_name" : "Enter file name", "doc_type": "Choose file type"} for page in range(self.total_pages)]
-        print("pre update_page_display")
         self.update_page_display()  # Display the first page
-        print("post")
 
     def show_page(self, pixmap):
         """Display PDF page in the QGraphicsView."""
@@ -87,12 +95,44 @@ class PDFProcessingPage(QDialog):
             self.current_page = self.processor.next_page()
             self.update_page_display()
 
+    def jump_to_page(self):
+        """Jump to the page specified by the user."""
+        # Get the page number from the input field (1-based input)
+        print(f"Entered number: {self.currentPageLineEdit.text().strip()}")
+        page_number = int(self.currentPageLineEdit.text()) - 1  # Convert to 0-based index
+        print(f"Converted page number (0-based): {page_number}")
+
+        # If the page number is invalid, it will jump to the closest valid page
+        if self.processor:
+            # Adjust for the 0-based index within the valid page range
+            self.processor.go_to_page(page_number)
+            self.current_page = self.processor.current_page
+            print("updating from jump")
+            self.update_page_display()  # Update the display after the page change
+
+    def save_file_name(self):
+        self.page_configurations[self.current_page]['file_name'] = self.fileNameLineEdit.text().strip()
+
+    def save_doc_type(self):
+        self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
+
     def update_page_display(self):
         """Update the displayed page."""
+        import traceback
+        print(f"Called by: {''.join(traceback.format_stack())}")
+
         image_data = self.processor.get_page_image(self.current_page)
         pixmap = self.convert_to_pixmap(image_data)
         self.show_page(pixmap)
-        self.currentPageLabel.setText(f"Current Page: {self.current_page + 1} / {self.processor.get_total_pages()}")
+
+        self.currentPageLabel.setText("Current Page:")
+
+        if self.totalPagesLabel.text() == "" and self.total_pages != 0:
+            self.totalPagesLabel.setText(f"/ {self.total_pages}")
+
+        if self.currentPageLineEdit:
+            self.currentPageLineEdit.setText(f"{self.current_page+1}")
+
         if self.fileNameLineEdit:
             self.fileNameLineEdit.setText(self.page_configurations[self.current_page]['file_name'])
         if self.docTypeDropdownBox:

@@ -59,6 +59,21 @@ class PDFProcessor:
             self.current_page -= 1
         return self.current_page
 
+    def go_to_page(self, page_number):
+        """Jump to the specified page if it is within the valid range.
+        If the page number is invalid, go to the closest valid page."""
+
+        if page_number < 0:
+            print(f"Error: Page number {page_number} is out of range. Jumping to the first page (0).")
+            self.current_page = 0  # Go to the first page
+        elif page_number >= self.total_pages:
+            print(f"Error: Page number {page_number} is out of range. Jumping to the last page ({self.total_pages}).")
+            self.current_page = self.total_pages - 1  # Go to the last page
+        else:
+            self.current_page = page_number  # Valid page number
+
+        print(f"Now at page {self.current_page + 1}.")
+
     def get_page_text(self, page_number):
         """Extracts text from the given page."""
         try:
