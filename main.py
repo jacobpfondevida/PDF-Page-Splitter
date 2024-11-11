@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog, QComboBox
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import QByteArray
 import sys
@@ -31,6 +31,8 @@ class PDFProcessingPage(QDialog):
 
         self.currentPageLabel = self.findChild(QLabel, "currentPageLabel")
 
+        self.docTypeDropdownBox = self.findChild(QComboBox, "docTypeDropdownBox")
+
         # Connect button signals to methods
         self.prevPageButton.clicked.connect(self.show_prev_page)
         self.nextPageButton.clicked.connect(self.show_next_page)
@@ -39,15 +41,22 @@ class PDFProcessingPage(QDialog):
         # Initialize variables
         self.processor = None
         self.current_page = 0  # Initialize current_page
+        self.total_pages = 0
 
         print("PDFProcessingPage initialized")
 
     def set_paths(self, file_path, folder_path):
         """Set the file and folder paths passed from the main window."""
+        print("in set_paths")
         self.file_path = file_path
         self.folder_path = folder_path
+
         self.processor = PDFProcessor(self.file_path, self.folder_path)  # Initialize PDFProcessor with the file path
+        self.total_pages = self.processor.get_total_pages()
+        self.page_configurations = [{"file_name" : "Enter file name", "doc_type": "Choose file type"} for page in range(self.total_pages)]
+        print("pre update_page_display")
         self.update_page_display()  # Display the first page
+        print("post")
 
     def show_page(self, pixmap):
         """Display PDF page in the QGraphicsView."""
@@ -61,12 +70,16 @@ class PDFProcessingPage(QDialog):
     def show_prev_page(self):
         """Show the previous page."""
         if self.processor:
+            self.page_configurations[self.current_page]['file_name'] = self.fileNameLineEdit.text().strip()
+            self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
             self.current_page = self.processor.prev_page()
             self.update_page_display()
 
     def show_next_page(self):
         """Show the next page."""
         if self.processor:
+            self.page_configurations[self.current_page]['file_name'] = self.fileNameLineEdit.text().strip()
+            self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
             self.current_page = self.processor.next_page()
             self.update_page_display()
 
@@ -76,6 +89,10 @@ class PDFProcessingPage(QDialog):
         pixmap = self.convert_to_pixmap(image_data)
         self.show_page(pixmap)
         self.currentPageLabel.setText(f"Current Page: {self.current_page + 1} / {self.processor.get_total_pages()}")
+        if self.fileNameLineEdit:
+            self.fileNameLineEdit.setText(self.page_configurations[self.current_page]['file_name'])
+        if self.docTypeDropdownBox:
+            self.docTypeDropdownBox.setCurrentText(self.page_configurations[self.current_page]['doc_type'])
 
     def convert_to_pixmap(self, image_data):
         """Convert the image bytes to a QPixmap."""

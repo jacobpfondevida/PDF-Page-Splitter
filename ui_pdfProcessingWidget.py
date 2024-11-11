@@ -50,8 +50,9 @@ class Ui_Form(object):
         self.docTypeDropdownBox = QComboBox(self.verticalLayoutWidget)
         self.docTypeDropdownBox.addItem("")
         self.docTypeDropdownBox.addItem("")
+        self.docTypeDropdownBox.addItem("")
         self.docTypeDropdownBox.setObjectName(u"docTypeDropdownBox")
-        self.docTypeDropdownBox.setMinimumSize(QSize(80, 0))
+        self.docTypeDropdownBox.setMinimumSize(QSize(100, 0))
 
         self.horizontalLayout_2.addWidget(self.docTypeDropdownBox)
 
@@ -88,8 +89,9 @@ class Ui_Form(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.currentPageLabel.setText("")
         self.fileNameLineEdit.setText(QCoreApplication.translate("Form", u"Enter file name", None))
-        self.docTypeDropdownBox.setItemText(0, QCoreApplication.translate("Form", u"AUTH", None))
-        self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"REF", None))
+        self.docTypeDropdownBox.setItemText(0, QCoreApplication.translate("Form", u"Choose file type", None))
+        self.docTypeDropdownBox.setItemText(1, QCoreApplication.translate("Form", u"AUTH", None))
+        self.docTypeDropdownBox.setItemText(2, QCoreApplication.translate("Form", u"REF", None))
 
         self.prevPageButton.setText(QCoreApplication.translate("Form", u"Previous Page", None))
         self.saveButton.setText(QCoreApplication.translate("Form", u"Save Page as PDF", None))

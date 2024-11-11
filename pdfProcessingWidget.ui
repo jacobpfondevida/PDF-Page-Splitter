@@ -46,10 +46,15 @@
        <widget class="QComboBox" name="docTypeDropdownBox">
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
+        <item>
+         <property name="text">
+          <string>Choose file type</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>AUTH</string>
