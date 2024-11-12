@@ -3,14 +3,20 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPus
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import QByteArray, Qt
 import sys
-from pdf_processor import PDFProcessor  # Assuming you have this class defined correctly
+import os
+from pdf_processor import PDFProcessor
+
+def get_ui_path(ui_filename):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, ui_filename)
+    return ui_filename
 
 # PDF Processing Page
 class PDFProcessingPage(QDialog):
     def __init__(self):
         print("PDFProcessingPage initializing")
         super().__init__()
-        uic.loadUi("pdfProcessingWidget.ui", self)
+        uic.loadUi(get_ui_path("pdfProcessingWidget.ui"), self)
         self.setWindowTitle("PDF Processing")
 
         # Graphics view to display the page
@@ -188,7 +194,7 @@ class PDFProcessingPage(QDialog):
 
                         self.processor.save_page_as_pdf(i, current_file_name, current_doc_type)
 
-                    success_message = f"Successfully saved {self.total_pages}."
+                    success_message = f"Successfully saved {self.total_pages} pages."
                     QMessageBox.about(self, "Success", success_message)
             except Exception as e:
                 error_message = f"Error saving page named '{current_file_name}.pdf' in the {current_doc_type} folder: {e}"
@@ -220,7 +226,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Load the .ui file
-        uic.loadUi('mainwindow.ui', self)
+        uic.loadUi(get_ui_path('mainwindow.ui'), self)
 
         # Access buttons and other widgets from the UI
         self.inputFileButton = self.findChild(QPushButton, 'inputFileButton')
