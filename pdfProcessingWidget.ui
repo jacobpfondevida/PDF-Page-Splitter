@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>692</width>
-    <height>555</height>
+    <width>685</width>
+    <height>663</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>20</x>
      <y>0</y>
      <width>641</width>
-     <height>521</height>
+     <height>641</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -27,11 +27,38 @@
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
     <item>
-     <widget class="QLabel" name="currentPageLabel">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="currentPageLabel">
+        <property name="text">
+         <string>Current Page: </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="currentPageLineEdit">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="inputMask">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="totalPagesLabel">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -46,18 +73,53 @@
        <widget class="QComboBox" name="docTypeDropdownBox">
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
         <item>
          <property name="text">
-          <string>AUTH</string>
+          <string>Choose file type</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>REF</string>
+          <string>Insurance Auth</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ID</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>OrthoK</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Outside Rx</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>POF Waiver</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rx Request</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Referrals</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Summaries</string>
          </property>
         </item>
        </widget>
@@ -84,6 +146,24 @@
        <widget class="QPushButton" name="nextPageButton">
         <property name="text">
          <string>Next Page</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="clearAllButton">
+        <property name="text">
+         <string>Clear All</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveAllPagesButton">
+        <property name="text">
+         <string>Save All Pages</string>
         </property>
        </widget>
       </item>
