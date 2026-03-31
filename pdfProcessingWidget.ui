@@ -97,6 +97,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Lab Invoice</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>OrthoK</string>
          </property>
         </item>

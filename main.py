@@ -73,7 +73,7 @@ class PDFProcessingPage(QDialog):
 
         self.processor = PDFProcessor(self.file_path, self.folder_path)  # Initialize PDFProcessor with the file path
         self.total_pages = self.processor.get_total_pages()
-        self.page_configurations = [{"file_name" : "Enter file name", "doc_type": "Choose file type"} for page in range(self.total_pages)]
+        self.page_configurations = [{"file_name" : "", "doc_type": "Choose file type"} for page in range(self.total_pages)]
         self.update_page_display()  # Display the first page
 
     def show_page(self, pixmap):
