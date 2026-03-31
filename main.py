@@ -217,7 +217,7 @@ class PDFProcessingPage(QDialog):
             QMessageBox.warning(self, "File(s) not configured", warning_message)
 
     def clear_page_configurations(self):
-        self.page_configurations = [{"file_name" : "Enter file name", "doc_type": "Choose file type"} for page in range(self.total_pages)]
+        self.page_configurations = [{"file_name" : "", "doc_type": "Choose file type"} for page in range(self.total_pages)]
         self.update_page_display()
 
 
