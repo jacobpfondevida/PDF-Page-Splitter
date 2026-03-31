@@ -22,9 +22,11 @@ class PDFProcessor:
         self.file_path = file_path
         self.folder_path = folder_path
 
+        # "Display text in app" : "Folder Name"
         self.doc_type_dictionary = {
         "Insurance Auth" : "Insurance Auths",
         "ID" : "ID'S",
+        "Lab Invoice": "Lab Invoices",
         "OrthoK" : "OrthoK",
         "Outside Rx" : "Outside Rx",
         "POF Waiver" : "POF Waivers",

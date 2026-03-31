@@ -1,7 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog, QComboBox
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import QByteArray, Qt
+from PyQt6.QtCore import QByteArray, Qt, QSettings
 import sys
 import os
 from pdf_processor import PDFProcessor
@@ -225,6 +225,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Initialize settings
+        self.settings = QSettings("PDF-Page-Splitter", "PDF-Page-Splitter")
+
         # Load the .ui file
         uic.loadUi(get_ui_path('mainwindow.ui'), self)
 
@@ -241,6 +244,13 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.folder_path = None
 
+        # Load last used folder path from settings
+        last_folder = self.settings.value("lastOutputFolder", "")
+        if last_folder and os.path.isdir(last_folder):
+            self.folder_path = last_folder
+            output_label = self.findChild(QLabel, 'outputFolderLabel')
+            output_label.setText(f"Output Folder: {last_folder}")
+
         # Create the PDF processing page
         self.pdf_page = PDFProcessingPage()
 
@@ -256,10 +266,13 @@ class MainWindow(QMainWindow):
 
     def open_output_folder_dialog(self):
         # Open a folder dialog to select an output folder
-        folder_path = QFileDialog.getExistingDirectory(self, "Select Output Folder", "")
+        # Use the last selected folder as the starting directory
+        initial_dir = self.folder_path if self.folder_path else ""
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Output Folder", initial_dir)
 
         if folder_path:
             self.folder_path = folder_path  # Store the folder path
+            self.settings.setValue("lastOutputFolder", folder_path)  # Save to settings
             output_label = self.findChild(QLabel, 'outputFolderLabel')
             output_label.setText(f"Output Folder: {folder_path}")
 

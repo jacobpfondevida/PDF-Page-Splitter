@@ -65,6 +65,9 @@
       <item>
        <widget class="QLineEdit" name="fileNameLineEdit">
         <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
          <string>Enter file name</string>
         </property>
        </widget>
