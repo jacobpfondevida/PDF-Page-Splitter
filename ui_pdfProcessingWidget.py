@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGraphicsView, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QSizePolicy,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGraphicsView,
+    QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -79,6 +79,11 @@ class Ui_Form(object):
         self.docTypeDropdownBox.setMinimumSize(QSize(100, 0))
 
         self.horizontalLayout_2.addWidget(self.docTypeDropdownBox)
+
+        self.combineWithPreviousCheckBox = QCheckBox(self.verticalLayoutWidget)
+        self.combineWithPreviousCheckBox.setObjectName(u"combineWithPreviousCheckBox")
+
+        self.horizontalLayout_2.addWidget(self.combineWithPreviousCheckBox)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -142,6 +147,7 @@ class Ui_Form(object):
         self.docTypeDropdownBox.setItemText(8, QCoreApplication.translate("Form", u"Referrals", None))
         self.docTypeDropdownBox.setItemText(9, QCoreApplication.translate("Form", u"Summaries", None))
 
+        self.combineWithPreviousCheckBox.setText(QCoreApplication.translate("Form", u"Combine with previous", None))
         self.prevPageButton.setText(QCoreApplication.translate("Form", u"Previous Page", None))
         self.saveButton.setText(QCoreApplication.translate("Form", u"Save Page as PDF", None))
         self.nextPageButton.setText(QCoreApplication.translate("Form", u"Next Page", None))

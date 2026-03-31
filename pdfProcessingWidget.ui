@@ -132,6 +132,13 @@
         </item>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="combineWithPreviousCheckBox">
+        <property name="text">
+         <string>Combine with previous</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>

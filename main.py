@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog, QComboBox
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QStackedWidget, QGraphicsView, QGraphicsScene, QWidget, QLineEdit, QMessageBox, QDialog, QComboBox, QCheckBox
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import QByteArray, Qt, QSettings
 import sys
@@ -45,6 +45,9 @@ class PDFProcessingPage(QDialog):
 
         self.docTypeDropdownBox = self.findChild(QComboBox, "docTypeDropdownBox")
         self.docTypeDropdownBox.activated.connect(self.save_doc_type)
+
+        self.combineWithPreviousCheckBox = self.findChild(QCheckBox, "combineWithPreviousCheckBox")
+        self.combineWithPreviousCheckBox.stateChanged.connect(self.on_combine_with_previous_changed)
 
         # Connect button signals to methods
         self.prevPageButton.clicked.connect(self.show_prev_page)
@@ -122,6 +125,41 @@ class PDFProcessingPage(QDialog):
     def save_doc_type(self):
         self.page_configurations[self.current_page]['doc_type'] = self.docTypeDropdownBox.currentText()
 
+    def on_combine_with_previous_changed(self):
+        """When 'Combine with previous' is checked, copy the filename and doc_type from the previous page."""
+        if self.current_page > 0 and self.combineWithPreviousCheckBox.isChecked():
+            previous_file_name = self.page_configurations[self.current_page - 1]['file_name']
+            previous_doc_type = self.page_configurations[self.current_page - 1]['doc_type']
+            self.page_configurations[self.current_page]['file_name'] = previous_file_name
+            self.page_configurations[self.current_page]['doc_type'] = previous_doc_type
+            self.fileNameLineEdit.setText(previous_file_name)
+            self.docTypeDropdownBox.setCurrentText(previous_doc_type)
+
+    def update_combine_with_previous_checkbox_state(self):
+        """Update checkbox state based on whether current config matches previous page's config."""
+        if self.current_page > 0:
+            current_file_name = self.page_configurations[self.current_page]['file_name']
+            current_doc_type = self.page_configurations[self.current_page]['doc_type']
+            previous_file_name = self.page_configurations[self.current_page - 1]['file_name']
+            previous_doc_type = self.page_configurations[self.current_page - 1]['doc_type']
+            
+            matches_previous = (current_file_name == previous_file_name and 
+                               current_doc_type == previous_doc_type and
+                               current_file_name != "" and
+                               current_doc_type != "Choose file type")
+            
+            # Temporarily disconnect to avoid triggering on_combine_with_previous_changed
+            self.combineWithPreviousCheckBox.stateChanged.disconnect()
+            self.combineWithPreviousCheckBox.setChecked(matches_previous)
+            self.combineWithPreviousCheckBox.stateChanged.connect(self.on_combine_with_previous_changed)
+            self.combineWithPreviousCheckBox.setEnabled(True)
+        else:
+            # First page cannot be combined with anything
+            self.combineWithPreviousCheckBox.stateChanged.disconnect()
+            self.combineWithPreviousCheckBox.setChecked(False)
+            self.combineWithPreviousCheckBox.stateChanged.connect(self.on_combine_with_previous_changed)
+            self.combineWithPreviousCheckBox.setEnabled(False)
+
     def update_page_display(self):
         """Update the displayed page."""
         import traceback
@@ -143,6 +181,9 @@ class PDFProcessingPage(QDialog):
             self.fileNameLineEdit.setText(self.page_configurations[self.current_page]['file_name'])
         if self.docTypeDropdownBox:
             self.docTypeDropdownBox.setCurrentText(self.page_configurations[self.current_page]['doc_type'])
+        
+        self.update_combine_with_previous_checkbox_state()
+
 
     def convert_to_pixmap(self, image_data):
         """Convert the image bytes to a QPixmap."""
@@ -188,16 +229,27 @@ class PDFProcessingPage(QDialog):
         if not file_name_indices and not doc_type_indices:
             try:
                 if self.processor:
-                    for i in range(len(self.page_configurations)):
-                        current_file_name = self.page_configurations[i]['file_name']
-                        current_doc_type = self.page_configurations[i]['doc_type']
+                    i = 0
+                    while i < len(self.page_configurations):
+                        start = i
+                        group_name = self.page_configurations[i]['file_name']
+                        group_doc_type = self.page_configurations[i]['doc_type']
+                        j = i + 1
+                        while j < len(self.page_configurations) and \
+                              self.page_configurations[j]['file_name'] == group_name and \
+                              self.page_configurations[j]['doc_type'] == group_doc_type:
+                            j += 1
+                        end = j - 1
 
-                        self.processor.save_page_as_pdf(i, current_file_name, current_doc_type)
+                        # same filename + doc type consecutive block
+                        self.processor.save_page_range_as_pdf(start, end, group_name, group_doc_type)
 
-                    success_message = f"Successfully saved {self.total_pages} pages."
+                        i = j
+
+                    success_message = f"Successfully saved {self.total_pages} pages in grouped output files."
                     QMessageBox.about(self, "Success", success_message)
             except Exception as e:
-                error_message = f"Error saving page named '{current_file_name}.pdf' in the {current_doc_type} folder: {e}"
+                error_message = f"Error saving page named '{group_name}.pdf' in the {group_doc_type} folder: {e}"
                 QMessageBox.warning(self, "Error saving pages", error_message)
         else:
             file_name_warning_message = ""

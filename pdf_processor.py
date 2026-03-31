@@ -98,3 +98,17 @@ class PDFProcessor:
         except Exception as e:
             print(f"Error saving page as PDF: {e}")
 
+    def save_page_range_as_pdf(self, start_page, end_page, output_file_name, doc_type):
+        try:
+            print(f"Conversion Range: {self.doc_type_dictionary.get(doc_type)} ({start_page + 1}-{end_page + 1})")
+            doc_type_folder = self.doc_type_dictionary[doc_type]
+            output_file_path = f"{self.folder_path}/{doc_type_folder}/{output_file_name}.pdf"
+            print(f"file path: {output_file_path}")
+            pdf_writer = fitz.open()
+            pdf_writer.insert_pdf(self.pdf_document, from_page=start_page, to_page=end_page)
+            pdf_writer.save(output_file_path)
+            print(f"Saved pages {start_page + 1}-{end_page + 1} as PDF: {output_file_path}")
+        except Exception as e:
+            print(f"Error saving page range as PDF: {e}")
+            raise
+
